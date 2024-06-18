@@ -6,7 +6,6 @@ email: filip.vrbik@vzp.cz
 discord: filip.vrbik
 """
 
-
 from datetime import datetime # funkce na práci s časem
 from random import sample # funkce pro gen. pseudonáhodných čísel
 
@@ -33,16 +32,26 @@ def kontrola_duplicit(zadana_cisla_dupl)-> bool:
 
 # Zadání vstupních 4 čísel a kontrola jejich správnosti
 def kontrola_a_zadani_cisel():
+    global pocet_pokusu
     while True:
         zadana_cisla = input("Enter a four digit number: ")
         if len(zadana_cisla) == 4 and zadana_cisla.isdigit() and zadana_cisla[0] != "0" and kontrola_duplicit(zadana_cisla):
+            pocet_pokusu += 1
             return (zadana_cisla)
-        else:
-            print ("The number must consist of four unique digits and must not start with zero!")
+        elif len(zadana_cisla) != 4:
+            print ("The number must consist of four digits!")
+        elif not zadana_cisla.isdigit():
+            print ("The number must consist of digits!")
+        elif zadana_cisla[0] == "0":
+            print ("The number most not start with zero!")
+        elif not kontrola_duplicit(zadana_cisla):
+            print ("The number most consist of four unique digits!")  
+        pocet_pokusu += 1
 
 # Tato funkce pocita, kolik je bulls a cows
 # Porovnává hodnoty z generuj_nahodna_cisla a kontrola_a_zadani_cisel
-def pocitej_bulls_cows(nahodna_cisla_zadani:int, zadana_cisla_uzivatel:str):
+def pocitej_bulls_cows(nahodna_cisla_zadani:int, zadana_cisla_uzivatel:str): 
+
     poradi_cisel = (0,1,2,3)
     pocet_bulls = 0
     pocet_cows = 0
@@ -55,6 +64,7 @@ def pocitej_bulls_cows(nahodna_cisla_zadani:int, zadana_cisla_uzivatel:str):
 
 #Tato funkce pouze vypíše počet bulls
 def vypis_pocet_bulls(pocet_bulls:int):
+
     if pocet_bulls == 0:
         print("0 bulls,", end=" ")
     elif pocet_bulls == 1:
@@ -76,7 +86,6 @@ def vypis_pocet_cows(pocet_bulls:int, pocet_cows:int):
         print(pocet_cows, " cows")
 
 
-
 print("Hi there!")
 print(40*"-")
 print("I've generated a random 4 digit number for you.")
@@ -87,12 +96,14 @@ print(40*"-")
 cas_zacatek = datetime.now()
 
 # První kolo vypsání a zadávání čísel
+pocet_pokusu = 0
 nahodna_cisla_zadani = generuj_nahodna_cisla(10,4)
+print(nahodna_cisla_zadani)
 zadana_cisla_uzivatel = kontrola_a_zadani_cisel()
 pocet_bulls, pocet_cows = pocitej_bulls_cows(nahodna_cisla_zadani, zadana_cisla_uzivatel)
 vypis_pocet_bulls(pocet_bulls)
 vypis_pocet_cows(pocet_bulls, pocet_cows)
-pocet_pokusu = 1
+
 
 # Zde smyčka neustálého zadávání, dokud uživatel netrefí všechna 4 čísla
 while pocet_bulls < 4:
@@ -100,7 +111,6 @@ while pocet_bulls < 4:
     pocet_bulls, pocet_cows = pocitej_bulls_cows(nahodna_cisla_zadani, zadana_cisla_uzivatel)
     vypis_pocet_bulls(pocet_bulls)
     vypis_pocet_cows(pocet_bulls, pocet_cows)
-    pocet_pokusu += 1
 
 print (f"in {pocet_pokusu} guesses!")
 
